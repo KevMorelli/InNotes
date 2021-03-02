@@ -1,4 +1,4 @@
-# in_notes
+# InNotes
 
 A new Flutter project.
 
