@@ -1,30 +1,18 @@
+import 'package:in_notes/core/models/editor_data_line.dart';
 import 'package:in_notes/core/view_models/base_view_model.dart';
 
 class PrototypeViewModel extends BaseViewModel {
-  bool isChecked = false;
-  bool isCheckboxVisible = false;
+  List<EditorDataLine> lines = [EditorDataLine()];
 
-  void toggleCheckbox(bool value) {
-    isChecked = value;
+  void onNewline(bool isCheckboxVisible) {
+    lines.add(EditorDataLine(isCheckboxVisible: isCheckboxVisible));
     notifyListeners();
   }
 
-  String processTextChanged(String value) {
-    if (value.startsWith("​[]") && !isCheckboxVisible) {
-      isCheckboxVisible = true;
-      notifyListeners();
+  void onRemoveLine(int index) {
+    if (index <= 0) return;
 
-      //! zero-width space below to detect the backspace with empty text, https://github.com/flutter/flutter/issues/14809
-      return value.replaceRange(0, 3, '​');
-    } else if (value.length == 0) {
-      isCheckboxVisible = false;
-      isChecked = false;
-      notifyListeners();
-
-      //! zero-width space below to detect the backspace with empty text, https://github.com/flutter/flutter/issues/14809
-      return '​';
-    }
-
-    return value;
+    lines.removeAt(index);
+    notifyListeners();
   }
 }
