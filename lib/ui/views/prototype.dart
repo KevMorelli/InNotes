@@ -18,17 +18,18 @@ class _PrototypeViewState extends State<PrototypeView> {
       builder: (context, viewModel, child) => Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: ListView.builder(
+          child: ReorderableListView.builder(
+              onReorder: viewModel.changeIndex,
+              buildDefaultDragHandles: false,
               itemCount: viewModel.lines.length,
               itemBuilder: (BuildContext context, int index) {
-                // access element from list using index
-                // you can create and return a widget of your choice
                 return TextEntry(
+                  key: ValueKey(viewModel.lines[index]),
                   onNewLine: viewModel.onNewline,
                   isCheckboxVisible: viewModel.lines[index].isCheckboxVisible,
                   index: index,
                   onDeleteLine: viewModel.onRemoveLine,
-                  isFocusing: index == viewModel.lines.length - 1,
+                  isFocusing: index == viewModel.focusIndex,
                 );
               }),
         ),

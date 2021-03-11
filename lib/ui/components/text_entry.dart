@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-typedef NewLineCallback = void Function(bool isCheckboxVisible);
+typedef NewLineCallback = void Function(int index, bool isCheckboxVisible);
 typedef DeleteLineCallback = void Function(int index);
 
 class TextEntry extends StatefulWidget {
-  TextEntry({this.onNewLine, this.onDeleteLine, this.isCheckboxVisible, this.index, this.isFocusing});
+  TextEntry({this.onNewLine, this.onDeleteLine, this.isCheckboxVisible, this.index, this.isFocusing, Key key}) : super(key: key);
 
   final NewLineCallback onNewLine;
   final DeleteLineCallback onDeleteLine;
@@ -21,6 +21,7 @@ class _TextEntryState extends State<TextEntry> {
   FocusNode _focusNode;
   bool _isChecked = false;
   bool _isCheckboxVisible = false;
+  bool _isDragHandleVisible = false;
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _TextEntryState extends State<TextEntry> {
         _isChecked = false;
       });
     } else {
-      widget.onNewLine(_isCheckboxVisible && _controller.text.length > 1);
+      widget.onNewLine(widget.index, _isCheckboxVisible && _controller.text.length > 1);
     }
   }
 
@@ -93,6 +94,12 @@ class _TextEntryState extends State<TextEntry> {
     return value;
   }
 
+  void dragHandleHover(bool isHover) {
+    setState(() {
+      _isDragHandleVisible = isHover;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.isFocusing) _focusNode.requestFocus();
@@ -126,6 +133,17 @@ class _TextEntryState extends State<TextEntry> {
             controller: _controller,
             onChanged: (_) => processText(),
           )),
+          ReorderableDragStartListener(
+            child: MouseRegion(
+              child: Icon(
+                Icons.drag_handle,
+                color: _isDragHandleVisible ? Colors.black : Colors.transparent,
+              ),
+              onHover: (_) => dragHandleHover(true),
+              onExit: (_) => dragHandleHover(false),
+            ),
+            index: widget.index,
+          )
         ],
       ),
     );
