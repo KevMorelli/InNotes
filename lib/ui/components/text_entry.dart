@@ -23,6 +23,10 @@ class _TextEntryState extends State<TextEntry> {
   bool _isCheckboxVisible = false;
   bool _isDragHandleVisible = false;
 
+  bool _isHeader = false;
+  List<double> _fontSizes = [14, 32, 24, 18.72, 16, 13.28, 10.72];
+  int _fontSizeIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +68,7 @@ class _TextEntryState extends State<TextEntry> {
     var processedValue = processTextChanged(_controller.text);
     if (processedValue != _controller.text) {
       _controller.text = processedValue;
+
       //! zero-width space below to detect the backspace with empty text, https://github.com/flutter/flutter/issues/14809
       if (processedValue == '​') _controller.selection = TextSelection.collapsed(offset: _controller.text.length);
     }
@@ -77,10 +82,26 @@ class _TextEntryState extends State<TextEntry> {
 
       //! zero-width space below to detect the backspace with empty text, https://github.com/flutter/flutter/issues/14809
       return value.replaceRange(0, 3, '​');
+    } else if (value.startsWith("​#") && !_isCheckboxVisible && (!_isHeader || _fontSizeIndex < _fontSizes.length - 1)) {
+      if (!_isHeader) {
+        _isHeader = true;
+        setState(() {
+          _fontSizeIndex = 1;
+        });
+      } else {
+        setState(() {
+          _fontSizeIndex++;
+        });
+      }
+
+      //! zero-width space below to detect the backspace with empty text, https://github.com/flutter/flutter/issues/14809
+      return value.replaceRange(0, 2, '​');
     } else if (value.length == 0) {
       var checkboxWasVisible = _isCheckboxVisible;
 
       setState(() {
+        if (_fontSizeIndex > 0) _fontSizeIndex--;
+        if (_fontSizeIndex == 0) _isHeader = false;
         _isCheckboxVisible = false;
         _isChecked = false;
       });
@@ -121,6 +142,8 @@ class _TextEntryState extends State<TextEntry> {
             style: TextStyle(
               decoration: _isChecked ? TextDecoration.lineThrough : TextDecoration.none,
               color: _isChecked ? Colors.grey : Colors.black,
+              fontSize: _fontSizes[_fontSizeIndex],
+              fontWeight: _isHeader ? FontWeight.bold : FontWeight.normal,
             ),
             decoration: InputDecoration(
               isDense: true,
