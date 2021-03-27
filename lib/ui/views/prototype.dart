@@ -16,6 +16,21 @@ class _PrototypeViewState extends State<PrototypeView> {
     return ViewModelBuilder<PrototypeViewModel>.reactive(
       viewModelBuilder: () => PrototypeViewModel(),
       builder: (context, viewModel, child) => Scaffold(
+        drawer: Drawer(
+          child: Container(),
+        ),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          shape: Border(bottom: BorderSide(width: 1, color: Colors.grey)),
+          title: Text('InNotes'),
+          actions: <Widget>[
+            IconButton(
+              icon: new Icon(Icons.more_horiz),
+              onPressed: () => print('hi on icon action'),
+            ),
+          ],
+        ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: ReorderableListView.builder(

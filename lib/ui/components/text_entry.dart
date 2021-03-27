@@ -141,14 +141,14 @@ class _TextEntryState extends State<TextEntry> {
             onSubmitted: (_) => onNewLine(),
             style: TextStyle(
               decoration: _isChecked ? TextDecoration.lineThrough : TextDecoration.none,
-              color: _isChecked ? Colors.grey : Colors.black,
+              color: _isChecked ? Colors.white30 : Colors.white,
               fontSize: _fontSizes[_fontSizeIndex],
               fontWeight: _isHeader ? FontWeight.bold : FontWeight.normal,
             ),
             decoration: InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.all(8),
-              hoverColor: Colors.grey.shade200,
+              hoverColor: Colors.grey.shade800,
               fillColor: Colors.transparent,
               filled: true,
               border: InputBorder.none,

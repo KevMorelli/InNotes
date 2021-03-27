@@ -18,11 +18,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'InNotes',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: ThemeData.dark().copyWith(
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          checkboxTheme: CheckboxThemeData(fillColor: MaterialStateProperty.resolveWith<Color>((_) => Colors.blue))),
       navigatorKey: StackedService.navigatorKey,
       initialRoute: initialRoute,
       onGenerateRoute: CustomRouter.generateRoute,
